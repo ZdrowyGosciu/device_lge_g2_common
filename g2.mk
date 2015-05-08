@@ -68,6 +68,9 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
 	frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml
 
+# Prepatch to fix BT/WiFi bus lockups
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/bluetooth/bcm4335_prepatch.hcd:system/vendor/firmware/bcm4335_prepatch.hcd
 
 # GPS configuration
 PRODUCT_COPY_FILES += \
@@ -109,9 +112,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml
 
 PRODUCT_PROPERTY_OVERRIDES += \
-        ro.sf.lcd_density=480 \
-	ro.opengles.version=196608 \
-	ro.loki_enabled=1
+	ro.sf.lcd_density=380 \
+	ro.opengles.version=196608
 
 # Audio Configuration
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -132,7 +134,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.ril_class=LgeLteRIL \
-	ro.telephony.ril.v3=qcomdsds
+	ro.telephony.ril.v3=qcomdsds \
+	ro.telephony.ril.config=qcomdsds
 
 #Upto 3 layers can go through overlays
 PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
@@ -174,7 +177,9 @@ PRODUCT_PACKAGES += \
 	libOmxVenc \
 	libOmxCore \
 	libstagefrighthw \
-	libc2dcolorconvert
+	libc2dcolorconvert \
+	libxml2 \
+	power.msm8974
 
 PRODUCT_PACKAGES += \
 	libloc_adapter \
@@ -197,7 +202,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.interface=wlan0 \
-	wifi.supplicant_scan_interval=15
+	wifi.supplicant_scan_interval=120
 
 # Enable AAC 5.1 output
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -212,24 +217,19 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.qualcomm.sensors.pedometer=true \
 	ro.qualcomm.sensors.pam=true \
 	ro.qualcomm.sensors.scrn_ortn=true \
-	debug.qualcomm.sns.hal=1 \
-	debug.qualcomm.sns.daemon=1 \
+	debug.qualcomm.sns.hal=i \
+	debug.qualcomm.sns.daemon=i \
 	debug.qualcomm.sns.libsensor1=e
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.sys.usb.config=mtp
+	persist.sys.usb.config=mtp \
+	persist.sys.isUsbOtgEnabled=true
 
 PRODUCT_PACKAGES += \
         lights.g2
 
 PRODUCT_COPY_FILES += \
         $(LOCAL_PATH)/configs/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
-
-# This hw ships locked, work around it with loki
-PRODUCT_PACKAGES += \
-        loki.sh \
-        loki_tool_static_g2 \
-        recovery-transform.sh
 
 $(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
 
