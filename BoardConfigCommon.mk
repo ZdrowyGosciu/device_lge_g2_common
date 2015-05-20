@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 
+# Toolchain http://github.com/VanirAOSP/linaro_toolchains_2015
+TARGET_ENABLE_PREBUILT_CLANG := true
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := linaro-4.9
+
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_CPU_ABI := armeabi-v7a
